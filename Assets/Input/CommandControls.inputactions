@@ -1,0 +1,71 @@
+{
+    "name": "CommandControls",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "4daac1ee-931d-4f39-b843-dda84e3bc169",
+            "actions": [
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "beffdaad-6c19-4176-a5e1-8587dbab7d48",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Defend",
+                    "type": "Button",
+                    "id": "d6994768-81fb-4b8f-abea-8bccc49a8b24",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "4b3cb7eb-ea91-4fb5-bd71-a459212753ef",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bcc16939-46e0-418c-af6f-bdf4c14585f8",
+                    "path": "<Keyboard>/#(A)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac2ae889-bd17-48d0-b9d8-ef1527e5ce8f",
+                    "path": "<Keyboard>/#(D)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Defend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "842f6d77-0dfa-4efc-87c3-8a46146a9ff1",
+                    "path": "<Keyboard>/#(S)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
