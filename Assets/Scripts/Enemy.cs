@@ -9,7 +9,12 @@ namespace Assets.Scripts
         [SerializeField] private int maxHealth;
         [SerializeField] private PlayerController playerController;
         [SerializeField] private int enemyDMG;
+        [SerializeField] private int[] timePattern;
+        [SerializeField] private EnemyPositionsScriptable[] positionsPattern;
+        
+        private int _movementNumber;
         private int _currentHealth;
+        private bool _isDead;
 
         private void Start()
         {
@@ -19,6 +24,7 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             playerController.onPlayerAttack += OnDamaged;
+            
         }
 
         private void OnDisable()
@@ -28,18 +34,19 @@ namespace Assets.Scripts
 
         private void OnDamaged(int playerDmg)
         {
+            if (_isDead) return;
             _currentHealth -= playerDmg;
-            if (_currentHealth <= 0) Destroy(gameObject);
+            if (_currentHealth <= 0) _isDead = true;
         }
 
-        private void EnemyAttack(Vector3 endPosition, float duration, int enemyDmg)
+        private void EnemyAttack(Vector3 endPosition, float duration)
         {
             transform.DOMove(endPosition, duration);
             DOVirtual.DelayedCall(duration/2,() =>
             {
                 if (!playerController.IsDefending && !playerController.IsJumping)
                 {
-                    playerController.TakeDamage(enemyDmg);
+                    playerController.TakeDamage(enemyDMG);
                 }
             });
         }
