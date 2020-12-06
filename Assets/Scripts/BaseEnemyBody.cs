@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts
 {
-    public class BaseEnemy : Enemy
+    public class BaseEnemy : EnemyBody
     {
         
     }
