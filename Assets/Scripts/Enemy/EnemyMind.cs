@@ -12,24 +12,29 @@ namespace Assets.Scripts
     {
         [SerializeField] private PlayerController playerController;
         [SerializeField] private int maxHealth;
-        [SerializeField] private int enemyDMG;
-        [SerializeField] private int[] timePattern;
-        [SerializeField] private EnemyPositionsScriptable[] positionsPattern;
-
-        private IEnumerator _enemyCoroutine;
+        [SerializeField] protected int enemyDMG;
+        [SerializeField] protected int[] timePattern;
+        [SerializeField] protected EnemyPositionsScriptable[] positionsPattern;
+        
         private EnemyBody _enemyBody;
         private Vector3 _initialPosition;
         private bool _enemyDead;
         private int _currentHealth;
         private List<IEnumerator> _stackState;
-        private int _movementNumber;
+        protected int _movementNumber;
 
         private void OnEnable()
         {
             playerController.onPlayerAttack += OnDamaged;
+            _currentHealth = maxHealth;
             _enemyBody = GetComponent<EnemyBody>();
             _initialPosition = transform.position;
             _enemyDead = false;
+            
+            //Pattern preparation
+            if(positionsPattern == null) positionsPattern = new EnemyPositionsScriptable[6];
+            if(timePattern == null) timePattern = new int[6];
+            _movementNumber = 0;
         }
 
         private void OnDisable()
@@ -40,7 +45,7 @@ namespace Assets.Scripts
         private void Update()
         {
             if (_stackState == null) _stackState = new List<IEnumerator>();
-            if (_stackState.Any()) _stackState.Add(Decide());
+            if (!_stackState.Any()) _stackState.Add(Decide());
             var currentState = _stackState.Last();
             var endedAction = !currentState.MoveNext();
             var currentYieldedObject = currentState.Current;
@@ -69,12 +74,10 @@ namespace Assets.Scripts
         private void OnDamaged(int playerDmg)
         {
             _currentHealth -= playerDmg;
-            if (_currentHealth <= 0)
-            {
-                _enemyDead = true;
-                _stackState.Clear();
-                PushState(Die());
-            }
+            if (_currentHealth > 0) return;
+            _enemyDead = true;
+            _stackState.Clear();
+            PushState(Die());
         }
 
         protected virtual IEnumerator Die()
@@ -91,6 +94,11 @@ namespace Assets.Scripts
         protected virtual IEnumerator Attack(int enemyDamage, Vector3 endPosition, float duration)
         {
             yield return _enemyBody.EnemyAttack(enemyDamage, playerController, endPosition, duration);
+        }
+
+        protected IEnumerator Wait(float waitingTime)
+        {
+            yield return DOVirtual.DelayedCall(waitingTime, () => {});
         }
     }
 }
