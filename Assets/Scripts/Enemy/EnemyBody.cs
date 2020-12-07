@@ -8,7 +8,7 @@ namespace Assets.Scripts
     {
         public Tween EnemyMove(Vector3 endPosition, float duration)
         {
-            return transform.DOMove(endPosition, duration);
+            return transform.DOMove(endPosition, duration).SetEase(Ease.Linear);
         }
 
         public IEnumerator EnemyAttack(int enemyDMG, PlayerController playerController, Vector3 endPosition, float duration)

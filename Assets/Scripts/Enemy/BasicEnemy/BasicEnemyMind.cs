@@ -13,6 +13,7 @@ namespace Assets.Scripts
             yield return Wait(attackDelay);
             yield return Attack(enemyDMG, positionsPattern[_movementNumber].Position, attackDuration);
             _movementNumber += 1;
+            if (_movementNumber >= timePattern.Length) _movementNumber = 0;
         }
     }
 }

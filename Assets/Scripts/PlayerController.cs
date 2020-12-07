@@ -16,13 +16,12 @@ namespace Assets.Scripts
         [SerializeField] private float shieldDuration;
         [SerializeField] private float defenseCooldown;
         [SerializeField] private int playerDMG;
-        [SerializeField] private int maxHealth;
+        [SerializeField] private FluctuableValue healthValue;
 
         public event Action<int> onPlayerAttack;
 
         private Vector3 _initialPosition;
         private CommandControls _commandControls;
-        private int _currentHealth;
 
         private bool _isAttacking;
         private bool _attackEnabled;
@@ -79,6 +78,7 @@ namespace Assets.Scripts
             _commandControls.Gameplay.Defend.started += PlayerDefend;
             _commandControls.Gameplay.Jump.started += PlayerJump;
             _initialPosition = transform.position;
+            healthValue.ResetValue();
             _isAttacking = false;
             _isDefending = false;
             _isJumping = false;
@@ -129,7 +129,7 @@ namespace Assets.Scripts
 
         public void TakeDamage(int enemyDmg)
         {
-            _currentHealth -= enemyDmg;
+            healthValue.CurrentValue -= enemyDmg;
         }
     }
 }
