@@ -1141,7 +1141,6 @@ MonoBehaviour:
   shieldDuration: 2
   defenseCooldown: 4
   playerDMG: 1
-  maxHealth: 0
   healthValue: {fileID: 11400000, guid: 89d0a2d7cb80c054e91da055e30831ba, type: 2}
 --- !u!1 &1397791064
 GameObject:
@@ -1248,13 +1247,28 @@ MonoBehaviour:
   playerController: {fileID: 1394543644}
   maxHealth: 1
   enemyDMG: 1
-  timePattern: 02000000010000000200000003000000
-  positionsPattern:
-  - {fileID: 11400000, guid: 413b8f2d2eee2914bb8597390cccf5cc, type: 2}
-  - {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
-  - {fileID: 11400000, guid: 7029d8a22615ed147bbfba0bfb5e80c7, type: 2}
-  - {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
-  attackDuration: 5
+  enemyCombo:
+  - waitingTime: 3
+    durationTime: 2
+    endingPosition: {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
+    enemyNextAction: 0
+  - waitingTime: 2
+    durationTime: 2
+    endingPosition: {fileID: 11400000, guid: 413b8f2d2eee2914bb8597390cccf5cc, type: 2}
+    enemyNextAction: 0
+  - waitingTime: 1
+    durationTime: 2
+    endingPosition: {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
+    enemyNextAction: 0
+  - waitingTime: 2
+    durationTime: 1
+    endingPosition: {fileID: 11400000, guid: 50988d48fffe5d34baa3efe5e4c8ac3d, type: 2}
+    enemyNextAction: 1
+  - waitingTime: 2
+    durationTime: 1
+    endingPosition: {fileID: 0}
+    enemyNextAction: 3
+  initialPosition: {fileID: 11400000, guid: 413b8f2d2eee2914bb8597390cccf5cc, type: 2}
 --- !u!114 &1437637939
 MonoBehaviour:
   m_ObjectHideFlags: 0

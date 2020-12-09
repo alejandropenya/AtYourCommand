@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,19 +7,16 @@ namespace Assets.Scripts
 {
     public abstract class EnemyBody : MonoBehaviour
     {
-        public Tween EnemyMove(Vector3 endPosition, float duration)
+        public Tween EnemyMove(EnemyPositionsScriptable endPosition, float duration)
         {
-            return transform.DOMove(endPosition, duration).SetEase(Ease.Linear);
+            return transform.DOMove(endPosition.Position, duration).SetEase(Ease.Linear);
         }
 
-        public IEnumerator EnemyAttack(int enemyDMG, PlayerController playerController, Vector3 endPosition, float duration)
+        public virtual IEnumerator EnemyAttack(int enemyDMG, PlayerController playerController, EnemyPositionsScriptable endPosition, float duration, Action onHit)
         {
             var tween = EnemyMove(endPosition, duration);
             yield return DOVirtual.DelayedCall(duration/2,() => {});
-            if (!playerController.IsDefending && !playerController.IsJumping)
-            {
-                playerController.TakeDamage(enemyDMG);
-            }
+            onHit?.Invoke();
             yield return tween;
         }
     }

@@ -10,36 +10,34 @@ namespace Assets.Scripts
 {
     public abstract class EnemyMind : MonoBehaviour
     {
-        [SerializeField] private PlayerController playerController;
+        [SerializeField] protected PlayerController playerController;
         [SerializeField] private int maxHealth;
         [SerializeField] protected int enemyDMG;
-        [SerializeField] protected int[] timePattern;
-        [SerializeField] protected EnemyPositionsScriptable[] positionsPattern;
-        
-        private EnemyBody _enemyBody;
-        private Vector3 _initialPosition;
+        [SerializeField] protected EnemyAction[] enemyCombo;
+        [SerializeField] protected EnemyPositionsScriptable initialPosition;
+
+        protected EnemyBody _enemyBody;
         private bool _enemyDead;
         private int _currentHealth;
         private List<IEnumerator> _stackState;
-        protected int _movementNumber;
+        protected int _comboNumber;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
-            playerController.onPlayerAttack += OnDamaged;
+            playerController.onPlayerAttacks += OnDamaged;
             _currentHealth = maxHealth;
+            transform.position = initialPosition.Position;
             _enemyBody = GetComponent<EnemyBody>();
-            _initialPosition = transform.position;
             _enemyDead = false;
-            
+
             //Pattern preparation
-            if(positionsPattern == null) positionsPattern = new EnemyPositionsScriptable[6];
-            if(timePattern == null) timePattern = new int[6];
-            _movementNumber = 0;
+            if (enemyCombo == null) enemyCombo = new EnemyAction[6];
+            _comboNumber = 0;
         }
 
         private void OnDisable()
         {
-            playerController.onPlayerAttack -= OnDamaged;
+            playerController.onPlayerAttacks -= OnDamaged;
         }
 
         private void Update()
@@ -88,17 +86,28 @@ namespace Assets.Scripts
 
         protected virtual IEnumerator GoInitialPosition(float duration)
         {
-            yield return _enemyBody.EnemyMove(_initialPosition, duration);
+            yield return _enemyBody.EnemyMove(initialPosition, duration);
         }
 
-        protected virtual IEnumerator Attack(int enemyDamage, Vector3 endPosition, float duration)
+        protected virtual IEnumerator Attack(int enemyDamage, EnemyPositionsScriptable endPosition, float duration)
         {
-            yield return _enemyBody.EnemyAttack(enemyDamage, playerController, endPosition, duration);
+            yield return _enemyBody.EnemyAttack(enemyDamage, playerController, endPosition, duration, () =>
+            {
+                if (!playerController.IsDefending && !playerController.IsJumping)
+                {
+                    playerController.TakeDamage(enemyDMG);
+                }
+            });
+        }
+
+        protected virtual IEnumerator Move(EnemyPositionsScriptable endPosition, float duration)
+        {
+            yield return _enemyBody.EnemyMove(endPosition, duration);
         }
 
         protected IEnumerator Wait(float waitingTime)
         {
-            yield return DOVirtual.DelayedCall(waitingTime, () => {});
+            yield return DOVirtual.DelayedCall(waitingTime, () => { });
         }
     }
 }

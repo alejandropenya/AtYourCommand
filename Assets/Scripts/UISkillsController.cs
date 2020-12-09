@@ -19,9 +19,12 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            _attackButtonEnabled = playerController.CanAttack;
-            _defenseButtonEnabled = playerController.CanDefend;
-            _jumpButtonEnabled = playerController.CanJump;
+            _attackButtonEnabled = false;
+            attackImage.DOFade(minFadeValue, 0);
+            _defenseButtonEnabled = false;
+            defenseImage.DOFade(minFadeValue, 0);
+            _jumpButtonEnabled = false;
+            jumpImage.DOFade(minFadeValue, 0);
         }
 
         private void Update()

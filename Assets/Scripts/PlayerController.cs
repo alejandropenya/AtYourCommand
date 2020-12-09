@@ -18,7 +18,8 @@ namespace Assets.Scripts
         [SerializeField] private int playerDMG;
         [SerializeField] private FluctuableValue healthValue;
 
-        public event Action<int> onPlayerAttack;
+        public event Action<int> onPlayerAttacks;
+        public event Action onPlayerParries;
 
         private Vector3 _initialPosition;
         private CommandControls _commandControls;
@@ -82,9 +83,9 @@ namespace Assets.Scripts
             _isAttacking = false;
             _isDefending = false;
             _isJumping = false;
-            _attackEnabled = true;
-            _defenseEnabled = true;
-            _jumpEnabled = true;
+            _attackEnabled = false;
+            _defenseEnabled = false;
+            _jumpEnabled = false;
             shieldRenderer.enabled = false;
         }
 
@@ -124,7 +125,7 @@ namespace Assets.Scripts
 
         private void OnPlayerAttack(int playerDmg)
         {
-            onPlayerAttack?.Invoke(playerDmg);
+            onPlayerAttacks?.Invoke(playerDmg);
         }
 
         public void TakeDamage(int enemyDmg)
