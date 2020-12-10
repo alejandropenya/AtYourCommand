@@ -17,17 +17,21 @@ namespace Assets.Scripts
         [SerializeField] private float defenseCooldown;
         [SerializeField] private int playerDMG;
         [SerializeField] private FluctuableValue healthValue;
-
-        public event Action<int> onPlayerAttacks;
-        public event Action onPlayerParries;
+        [SerializeField] private float parryTimeWindow;
 
         private Vector3 _initialPosition;
         private CommandControls _commandControls;
+        private float _timeAfterShield;
+
+        public float ParryTimeWindow => parryTimeWindow;
+
+        public float TimeAfterShield => _timeAfterShield;
+
+        public event Action<int> onPlayerAttacks;
 
         private bool _isAttacking;
         private bool _attackEnabled;
         public bool CanAttack => !_isAttacking && _attackEnabled;
-
 
         public bool IsAttacking
         {
@@ -43,7 +47,6 @@ namespace Assets.Scripts
         private bool _defenseEnabled;
         public bool CanDefend => !_isDefending && _defenseEnabled;
 
-
         public bool IsDefending
         {
             get => _isDefending;
@@ -57,7 +60,6 @@ namespace Assets.Scripts
 
         private bool _isJumping;
         private bool _jumpEnabled;
-
         public bool CanJump => !_isJumping && _jumpEnabled;
 
         public bool IsJumping
@@ -80,6 +82,7 @@ namespace Assets.Scripts
             _commandControls.Gameplay.Jump.started += PlayerJump;
             _initialPosition = transform.position;
             healthValue.ResetValue();
+            _timeAfterShield = 0f;
             _isAttacking = false;
             _isDefending = false;
             _isJumping = false;
@@ -87,6 +90,11 @@ namespace Assets.Scripts
             _defenseEnabled = false;
             _jumpEnabled = false;
             shieldRenderer.enabled = false;
+        }
+
+        private void Update()
+        {
+            _timeAfterShield += Time.deltaTime;
         }
 
         private void PlayerAttack(InputAction.CallbackContext ctx)
@@ -102,6 +110,7 @@ namespace Assets.Scripts
             shieldRenderer.enabled = true;
             _defenseEnabled = false;
             _isDefending = true;
+            _timeAfterShield = 0f;
             DOVirtual.DelayedCall(shieldDuration, () =>
             {
                 shieldRenderer.enabled = false;

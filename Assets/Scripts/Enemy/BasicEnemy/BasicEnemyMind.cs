@@ -56,9 +56,14 @@ namespace Assets.Scripts
                     if (playerController.IsDefending)
                     {
                         playerController.AttackEnabled = true;
-                        
+                        if (CheckParry())
+                        {
+                            DoParry();
+                            return true;
+                        }
                     }
                 }
+                return false;
             });
         }
     }

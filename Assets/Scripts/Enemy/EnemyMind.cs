@@ -74,7 +74,7 @@ namespace Assets.Scripts
             _currentHealth -= playerDmg;
             if (_currentHealth > 0) return;
             _enemyDead = true;
-            _stackState.Clear();
+            ClearStackState();
             PushState(Die());
         }
 
@@ -97,6 +97,8 @@ namespace Assets.Scripts
                 {
                     playerController.TakeDamage(enemyDMG);
                 }
+
+                return false;
             });
         }
 
@@ -108,6 +110,22 @@ namespace Assets.Scripts
         protected IEnumerator Wait(float waitingTime)
         {
             yield return DOVirtual.DelayedCall(waitingTime, () => { });
+        }
+
+        protected void ClearStackState()
+        {
+            _stackState.Clear();
+        }
+
+        protected virtual bool CheckParry()
+        {
+            return playerController.TimeAfterShield < playerController.ParryTimeWindow;
+        }
+
+        protected virtual void DoParry()
+        {
+            ClearStackState();
+            PushState(GoInitialPosition(1));
         }
     }
 }
