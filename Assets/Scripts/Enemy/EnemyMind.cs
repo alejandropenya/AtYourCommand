@@ -22,17 +22,11 @@ namespace Assets.Scripts
         private List<IEnumerator> _stackState;
         protected int _comboNumber;
 
+        public event Action onEnemyDies;
+
         protected virtual void OnEnable()
         {
             playerController.onPlayerAttacks += OnDamaged;
-            _currentHealth = maxHealth;
-            transform.position = initialPosition.Position;
-            _enemyBody = GetComponent<EnemyBody>();
-            _enemyDead = false;
-
-            //Pattern preparation
-            if (enemyCombo == null) enemyCombo = new EnemyAction[6];
-            _comboNumber = 0;
         }
 
         private void OnDisable()
@@ -52,6 +46,19 @@ namespace Assets.Scripts
             if (endedAction) _stackState.Remove(currentState);
         }
 
+        public void Init(PlayerController newPlayerController)
+        {
+            _currentHealth = maxHealth;
+            transform.position = initialPosition.Position;
+            playerController = newPlayerController;
+            _enemyBody = GetComponent<EnemyBody>();
+            _enemyDead = false;
+
+            //Pattern preparation
+            if (enemyCombo == null) enemyCombo = new EnemyAction[6];
+            _comboNumber = 0;
+        }
+
         private IEnumerator WaitTween(Tween tween)
         {
             var completed = false;
@@ -68,7 +75,7 @@ namespace Assets.Scripts
         {
             _stackState.Add(enumerator);
         }
-
+        
         private void OnDamaged(int playerDmg)
         {
             _currentHealth -= playerDmg;
@@ -80,6 +87,7 @@ namespace Assets.Scripts
 
         protected virtual IEnumerator Die()
         {
+            OnEnemyDies();
             Destroy(gameObject);
             yield break;
         }
@@ -126,6 +134,11 @@ namespace Assets.Scripts
         {
             ClearStackState();
             PushState(GoInitialPosition(1));
+        }
+
+        protected virtual void OnEnemyDies()
+        {
+            onEnemyDies?.Invoke();
         }
     }
 }
