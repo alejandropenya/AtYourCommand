@@ -133,6 +133,7 @@ namespace Assets.Scripts
         protected virtual void DoParry()
         {
             ClearStackState();
+            _comboNumber = 0;
             PushState(GoInitialPosition(1));
         }
 

@@ -1109,7 +1109,7 @@ MonoBehaviour:
   defenseCooldown: 4
   playerDMG: 1
   healthValue: {fileID: 11400000, guid: 89d0a2d7cb80c054e91da055e30831ba, type: 2}
-  parryTimeWindow: 1
+  parryTimeWindow: 0.5
 --- !u!1 &1397791064
 GameObject:
   m_ObjectHideFlags: 0
