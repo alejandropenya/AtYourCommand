@@ -51,6 +51,7 @@ namespace Assets.Scripts.TankyAssaulterEnemy
                 {
                     if (playerController.IsDefending)
                     {
+                        playerController.DefenseEnabled = true;
                         if (CheckParry())
                         {
                             DoParry();

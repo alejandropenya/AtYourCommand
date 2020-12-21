@@ -38,7 +38,7 @@ namespace Assets.Scripts
             var currentState = _stackState.Last();
             var stateCount = _stackState.Count;
             var endedAction = !currentState.MoveNext();
-            if (stateCount != _stackState.Count)
+            if (stateCount < _stackState.Count)
             {
                 var currentYieldedObject = currentState.Current;
                 if (currentYieldedObject is IEnumerator enumerator) _stackState.Insert(stateCount, enumerator);
