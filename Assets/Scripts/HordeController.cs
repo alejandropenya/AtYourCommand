@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Assets.Scripts
         private List<GameObject> _enemyOrder;
         private GameObject _currentEnemy;
 
-        private void Start()
+        private IEnumerator Start()
         {
             _enemyOrder = new List<GameObject>();
             foreach (var objectInList in enemyEditorOrder)
@@ -21,7 +22,9 @@ namespace Assets.Scripts
                 var currentObject = objectInList.gameObject;
                 if (currentObject.GetComponent<EnemyMind>() != null) _enemyOrder.Add(currentObject);
             }
+
             _currentEnemy = _enemyOrder.First();
+            yield return new WaitForSeconds(1);
             InstantiateNextEnemy();
         }
 

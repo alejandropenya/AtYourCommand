@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DG.Tweening;
 using UnityEngine;
 
@@ -12,22 +11,20 @@ namespace Assets.Scripts
     {
         [SerializeField] protected PlayerController playerController;
         [SerializeField] private int maxHealth;
-        [SerializeField] protected int enemyDMG;
+        [SerializeField] protected int enemyDamage;
+        [SerializeField] private float playerParryTimeWindow;
+        [SerializeField] protected float shieldDuration;
         [SerializeField] protected EnemyAction[] enemyCombo;
         [SerializeField] protected EnemyPositionsScriptable initialPosition;
 
-        protected EnemyBody _enemyBody;
         private bool _enemyDead;
         private int _currentHealth;
         private List<IEnumerator> _stackState;
-        protected int _comboNumber;
+        protected EnemyBody EnemyBody;
+        protected int ComboNumber;
+        protected bool IsDefending;
 
         public event Action onEnemyDies;
-
-        protected virtual void OnEnable()
-        {
-            playerController.onPlayerAttacks += OnDamaged;
-        }
 
         private void OnDisable()
         {
@@ -39,24 +36,37 @@ namespace Assets.Scripts
             if (_stackState == null) _stackState = new List<IEnumerator>();
             if (!_stackState.Any()) _stackState.Add(Decide());
             var currentState = _stackState.Last();
+            var stateCount = _stackState.Count;
             var endedAction = !currentState.MoveNext();
-            var currentYieldedObject = currentState.Current;
-            if (currentYieldedObject is IEnumerator enumerator) _stackState.Add(enumerator);
-            if (currentYieldedObject is Tween tween) _stackState.Add(WaitTween(tween));
+            if (stateCount != _stackState.Count)
+            {
+                var currentYieldedObject = currentState.Current;
+                if (currentYieldedObject is IEnumerator enumerator) _stackState.Insert(stateCount, enumerator);
+                if (currentYieldedObject is Tween tween) _stackState.Insert(stateCount,WaitTween(tween));
+            }
+            else
+            {
+                var currentYieldedObject = currentState.Current;
+                if (currentYieldedObject is IEnumerator enumerator) _stackState.Add(enumerator);
+                if (currentYieldedObject is Tween tween) _stackState.Add(WaitTween(tween));
+            }
             if (endedAction) _stackState.Remove(currentState);
         }
 
-        public void Init(PlayerController newPlayerController)
+        public virtual void Init(PlayerController newPlayerController)
         {
             _currentHealth = maxHealth;
             transform.position = initialPosition.Position;
             playerController = newPlayerController;
-            _enemyBody = GetComponent<EnemyBody>();
+            EnemyBody = GetComponent<EnemyBody>();
             _enemyDead = false;
+            playerController.onPlayerAttacks += OnDamaged;
+            IsDefending = false;
+            EnemyBody.Init();
 
             //Pattern preparation
             if (enemyCombo == null) enemyCombo = new EnemyAction[6];
-            _comboNumber = 0;
+            ComboNumber = 0;
         }
 
         private IEnumerator WaitTween(Tween tween)
@@ -75,9 +85,10 @@ namespace Assets.Scripts
         {
             _stackState.Add(enumerator);
         }
-        
+
         private void OnDamaged(int playerDmg)
         {
+            if (IsDefending) return;
             _currentHealth -= playerDmg;
             if (_currentHealth > 0) return;
             _enemyDead = true;
@@ -94,25 +105,24 @@ namespace Assets.Scripts
 
         protected virtual IEnumerator GoInitialPosition(float duration)
         {
-            yield return _enemyBody.EnemyMove(initialPosition, duration);
+            yield return EnemyBody.EnemyMove(initialPosition, duration);
         }
 
-        protected virtual IEnumerator Attack(int enemyDamage, EnemyPositionsScriptable endPosition, float duration)
+        protected virtual IEnumerator Attack(int enemyDmg, EnemyPositionsScriptable endPosition, float duration)
         {
-            yield return _enemyBody.EnemyAttack(enemyDamage, playerController, endPosition, duration, () =>
+            yield return EnemyBody.EnemyAttack(enemyDmg, playerController, endPosition, duration, () =>
             {
                 if (!playerController.IsDefending && !playerController.IsJumping)
                 {
-                    playerController.TakeDamage(enemyDMG);
+                    playerController.TakeDamage(this.enemyDamage);
                 }
-
                 return false;
             });
         }
 
         protected virtual IEnumerator Move(EnemyPositionsScriptable endPosition, float duration)
         {
-            yield return _enemyBody.EnemyMove(endPosition, duration);
+            yield return EnemyBody.EnemyMove(endPosition, duration);
         }
 
         protected IEnumerator Wait(float waitingTime)
@@ -127,13 +137,14 @@ namespace Assets.Scripts
 
         protected virtual bool CheckParry()
         {
-            return playerController.TimeAfterShield < playerController.ParryTimeWindow;
+            return playerController.TimeAfterShield < playerParryTimeWindow;
         }
 
         protected virtual void DoParry()
         {
+            playerController.AttackEnabled = true;
             ClearStackState();
-            _comboNumber = 0;
+            ComboNumber = 0;
             PushState(GoInitialPosition(1));
         }
 

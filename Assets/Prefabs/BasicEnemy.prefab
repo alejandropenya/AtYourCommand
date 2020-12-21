@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682794d6e08e46e593d424f9af1b0fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shieldRenderer: {fileID: 0}
 --- !u!114 &5023384759763632196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +61,8 @@ MonoBehaviour:
   playerController: {fileID: 0}
   maxHealth: 1
   enemyDMG: 1
+  playerParryTimeWindow: 0.5
+  shieldDuration: 0
   enemyCombo:
   - waitingTime: 3
     durationTime: 2

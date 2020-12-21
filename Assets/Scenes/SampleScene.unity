@@ -774,8 +774,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyEditorOrder:
-  - {fileID: 5023384759763632217, guid: b59b170110856da4b8df7cea7cbd5fcc, type: 3}
-  - {fileID: 5023384759763632217, guid: b59b170110856da4b8df7cea7cbd5fcc, type: 3}
+  - {fileID: 1753120492092923999, guid: 5c216bba995376c469640e88f50dee36, type: 3}
+  - {fileID: 1753120492092923999, guid: 5c216bba995376c469640e88f50dee36, type: 3}
   - {fileID: 5023384759763632217, guid: b59b170110856da4b8df7cea7cbd5fcc, type: 3}
   - {fileID: 5023384759763632217, guid: b59b170110856da4b8df7cea7cbd5fcc, type: 3}
   playerController: {fileID: 1394543644}
@@ -1109,7 +1109,6 @@ MonoBehaviour:
   defenseCooldown: 4
   playerDMG: 1
   healthValue: {fileID: 11400000, guid: 89d0a2d7cb80c054e91da055e30831ba, type: 2}
-  parryTimeWindow: 0.5
 --- !u!1 &1397791064
 GameObject:
   m_ObjectHideFlags: 0

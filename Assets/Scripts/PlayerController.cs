@@ -17,13 +17,10 @@ namespace Assets.Scripts
         [SerializeField] private float defenseCooldown;
         [SerializeField] private int playerDMG;
         [SerializeField] private FluctuableValue healthValue;
-        [SerializeField] private float parryTimeWindow;
 
         private Vector3 _initialPosition;
         private CommandControls _commandControls;
         private float _timeAfterShield;
-
-        public float ParryTimeWindow => parryTimeWindow;
 
         public float TimeAfterShield => _timeAfterShield;
 
@@ -55,6 +52,7 @@ namespace Assets.Scripts
 
         public bool DefenseEnabled
         {
+            get => _defenseEnabled;
             set => _defenseEnabled = value;
         }
 
