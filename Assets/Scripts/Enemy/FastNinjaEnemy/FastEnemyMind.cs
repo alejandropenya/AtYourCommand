@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
-using DG.Tweening;
-using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.FastNinjaEnemy
 {
-    public class BasicEnemyMind : EnemyMind
+    public class FastEnemyMind : EnemyMind
     {
-        public override void Init(PlayerController newPlayerController)
+         public override void Init(PlayerController newPlayerController)
         {
             base.Init(newPlayerController);
             playerController.DefenseEnabled = true;
@@ -27,6 +25,9 @@ namespace Assets.Scripts
                 case EnemyPosibleActions.Move:
                     yield return Move(enemyAction.EndingPosition, enemyAction.DurationTime);
                     break;
+                case EnemyPosibleActions.Combo:
+                    yield return Combo(currentPosition);
+                    break;
                 case EnemyPosibleActions.Shield:
                     break;
                 case EnemyPosibleActions.InitialPosition:
@@ -40,13 +41,14 @@ namespace Assets.Scripts
             if (ComboNumber >= enemyCombo.Length) ComboNumber = 0;
         }
 
+
         protected override IEnumerator Attack(int enemyDmg, EnemyPositionsScriptable endPosition, float duration)
         {
             yield return EnemyBody.EnemyAttack(enemyDmg, playerController, endPosition, duration, () =>
             {
                 if (!playerController.IsDefending && !playerController.IsJumping)
                 {
-                    playerController.TakeDamage(base.enemyDamage);
+                    playerController.TakeDamage(enemyDamage);
                 }
                 else
                 {
@@ -64,6 +66,17 @@ namespace Assets.Scripts
 
                 return false;
             });
+            currentPosition = endPosition;
+        }
+        
+        //TODO: Create a global variable for attacks duration
+        private IEnumerator Combo(EnemyPositionsScriptable startingPosition)
+        {
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
+            yield return Move(posiblePositions.Find(scriptable => scriptable.name == "Down"),1);
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
+            yield return Move(GetOppositePosition(startingPosition), 1);
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
         }
     }
 }

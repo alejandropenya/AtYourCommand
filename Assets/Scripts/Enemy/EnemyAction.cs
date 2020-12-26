@@ -25,6 +25,7 @@ namespace Assets.Scripts
         Attack,
         Move,
         Shield,
+        Combo,
         InitialPosition,
     }
 }

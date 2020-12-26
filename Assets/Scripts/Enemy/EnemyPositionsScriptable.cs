@@ -1,7 +1,4 @@
-﻿using System;
-using BasicTools.ButtonInspector;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {

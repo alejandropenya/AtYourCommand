@@ -16,6 +16,7 @@ namespace Assets.Scripts
         [SerializeField] protected float shieldDuration;
         [SerializeField] protected EnemyAction[] enemyCombo;
         [SerializeField] protected EnemyPositionsScriptable initialPosition;
+        [SerializeField] protected List<EnemyPositionsScriptable> posiblePositions;
 
         private bool _enemyDead;
         private int _currentHealth;
@@ -23,6 +24,7 @@ namespace Assets.Scripts
         protected EnemyBody EnemyBody;
         protected int ComboNumber;
         protected bool IsDefending;
+        protected EnemyPositionsScriptable currentPosition;
 
         public event Action onEnemyDies;
 
@@ -42,7 +44,7 @@ namespace Assets.Scripts
             {
                 var currentYieldedObject = currentState.Current;
                 if (currentYieldedObject is IEnumerator enumerator) _stackState.Insert(stateCount, enumerator);
-                if (currentYieldedObject is Tween tween) _stackState.Insert(stateCount,WaitTween(tween));
+                if (currentYieldedObject is Tween tween) _stackState.Insert(stateCount, WaitTween(tween));
             }
             else
             {
@@ -50,6 +52,7 @@ namespace Assets.Scripts
                 if (currentYieldedObject is IEnumerator enumerator) _stackState.Add(enumerator);
                 if (currentYieldedObject is Tween tween) _stackState.Add(WaitTween(tween));
             }
+
             if (endedAction) _stackState.Remove(currentState);
         }
 
@@ -57,6 +60,7 @@ namespace Assets.Scripts
         {
             _currentHealth = maxHealth;
             transform.position = initialPosition.Position;
+            currentPosition = initialPosition;
             playerController = newPlayerController;
             EnemyBody = GetComponent<EnemyBody>();
             _enemyDead = false;
@@ -105,7 +109,7 @@ namespace Assets.Scripts
 
         protected virtual IEnumerator GoInitialPosition(float duration)
         {
-            yield return EnemyBody.EnemyMove(initialPosition, duration);
+            yield return Move(initialPosition, duration);
         }
 
         protected virtual IEnumerator Attack(int enemyDmg, EnemyPositionsScriptable endPosition, float duration)
@@ -116,13 +120,16 @@ namespace Assets.Scripts
                 {
                     playerController.TakeDamage(this.enemyDamage);
                 }
+
                 return false;
             });
+            currentPosition = endPosition;
         }
 
         protected virtual IEnumerator Move(EnemyPositionsScriptable endPosition, float duration)
         {
             yield return EnemyBody.EnemyMove(endPosition, duration);
+            currentPosition = endPosition;
         }
 
         protected IEnumerator Wait(float waitingTime)
@@ -151,6 +158,23 @@ namespace Assets.Scripts
         protected virtual void OnEnemyDies()
         {
             onEnemyDies?.Invoke();
+        }
+
+        protected EnemyPositionsScriptable GetOppositePosition(EnemyPositionsScriptable actualPosition)
+        {
+            var position = actualPosition;
+            var maxDistance = 0f;
+            foreach (var pos in posiblePositions)
+            {
+                var distance = Vector3.Distance(actualPosition.Position, pos.Position);
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    position = pos;
+                }
+            }
+
+            return position;
         }
     }
 }
