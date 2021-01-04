@@ -72,11 +72,11 @@ namespace Assets.Scripts.FastNinjaEnemy
         //TODO: Create a global variable for attacks duration
         private IEnumerator Combo(EnemyPositionsScriptable startingPosition)
         {
-            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
-            yield return Move(posiblePositions.Find(scriptable => scriptable.name == "Down"),1);
-            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
-            yield return Move(GetOppositePosition(startingPosition), 1);
-            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),1);
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),0.6f);
+            yield return Move(posiblePositions.Find(scriptable => scriptable.name == "Down"),0.6f);
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),0.6f);
+            yield return Move(GetOppositePosition(startingPosition), 0.6f);
+            yield return Attack(enemyDamage, GetOppositePosition(currentPosition),0.6f);
         }
     }
 }

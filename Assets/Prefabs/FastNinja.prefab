@@ -61,7 +61,7 @@ MonoBehaviour:
   playerController: {fileID: 0}
   maxHealth: 1
   enemyDamage: 1
-  playerParryTimeWindow: 0.3
+  playerParryTimeWindow: 0.1
   shieldDuration: 0
   enemyCombo:
   - waitingTime: 0

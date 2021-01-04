@@ -62,26 +62,19 @@ MonoBehaviour:
   playerController: {fileID: 0}
   maxHealth: 2
   enemyDamage: 0
-  playerParryTimeWindow: 0.5
+  playerParryTimeWindow: 0.15
   shieldDuration: 2
   enemyCombo:
   - waitingTime: 1
-    durationTime: 2
+    durationTime: 1
     endingPosition: {fileID: 11400000, guid: 413b8f2d2eee2914bb8597390cccf5cc, type: 2}
     enemyNextAction: 0
   - waitingTime: 1
-    durationTime: 2
-    endingPosition: {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
-    enemyNextAction: 0
-  - waitingTime: 1
-    durationTime: 2
-    endingPosition: {fileID: 11400000, guid: 413b8f2d2eee2914bb8597390cccf5cc, type: 2}
-    enemyNextAction: 0
-  - waitingTime: 1
-    durationTime: 2
+    durationTime: 1
     endingPosition: {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
     enemyNextAction: 0
   initialPosition: {fileID: 11400000, guid: 7247c31610edea946814f3ffefedb2d2, type: 2}
+  posiblePositions: []
 --- !u!1 &1753120492936985579
 GameObject:
   m_ObjectHideFlags: 0
