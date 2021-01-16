@@ -27,7 +27,7 @@ namespace Assets.Scripts.TankyAssaulterEnemy
                     yield return Move(enemyAction.EndingPosition, enemyAction.DurationTime);
                     break;
                 case EnemyPosibleActions.InitialPosition:
-                    yield return GoInitialPosition(enemyAction.DurationTime);
+                    yield return GoActionInitialPosition(enemyAction.DurationTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

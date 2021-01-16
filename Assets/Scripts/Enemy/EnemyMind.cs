@@ -24,7 +24,7 @@ namespace Assets.Scripts
         protected EnemyBody EnemyBody;
         protected int ComboNumber;
         protected bool IsDefending;
-        protected EnemyPositionsScriptable currentPosition;
+        protected EnemyPositionsScriptable lastPosition;
 
         public event Action onEnemyDies;
 
@@ -60,7 +60,7 @@ namespace Assets.Scripts
         {
             _currentHealth = maxHealth;
             transform.position = initialPosition.Position;
-            currentPosition = initialPosition;
+            lastPosition = initialPosition;
             playerController = newPlayerController;
             EnemyBody = GetComponent<EnemyBody>();
             _enemyDead = false;
@@ -107,9 +107,9 @@ namespace Assets.Scripts
             yield break;
         }
 
-        protected virtual IEnumerator GoInitialPosition(float duration)
+        protected virtual IEnumerator GoActionInitialPosition(float duration)
         {
-            yield return Move(initialPosition, duration);
+            yield return Move(lastPosition, duration);
         }
 
         protected virtual IEnumerator Attack(int enemyDmg, EnemyPositionsScriptable endPosition, float duration)
@@ -123,13 +123,13 @@ namespace Assets.Scripts
 
                 return false;
             });
-            currentPosition = endPosition;
+            lastPosition = endPosition;
         }
 
         protected virtual IEnumerator Move(EnemyPositionsScriptable endPosition, float duration)
         {
             yield return EnemyBody.EnemyMove(endPosition, duration);
-            currentPosition = endPosition;
+            lastPosition = endPosition;
         }
 
         protected IEnumerator Wait(float waitingTime)
@@ -152,7 +152,7 @@ namespace Assets.Scripts
             playerController.AttackEnabled = true;
             ClearStackState();
             ComboNumber = 0;
-            PushState(GoInitialPosition(1));
+            PushState(GoActionInitialPosition(1));
         }
 
         protected virtual void OnEnemyDies()

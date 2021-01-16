@@ -30,7 +30,7 @@ namespace Assets.Scripts
                 case EnemyPosibleActions.Shield:
                     break;
                 case EnemyPosibleActions.InitialPosition:
-                    yield return GoInitialPosition(enemyAction.DurationTime);
+                    yield return GoActionInitialPosition(enemyAction.DurationTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
