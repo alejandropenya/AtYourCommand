@@ -149,7 +149,7 @@ namespace Assets.Scripts
 
         protected virtual void DoParry()
         {
-            playerController.AttackEnabled = true;
+            playerController.NotifyParry();
             ClearStackState();
             ComboNumber = 0;
             PushState(GoActionInitialPosition(1));

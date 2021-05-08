@@ -26,6 +26,10 @@ namespace Assets.Scripts
 
         public event Action<int> onPlayerAttacks;
 
+        private Tween _defenseTween;
+
+        #region PlayerConditions
+        
         private bool _isAttacking;
         private bool _attackEnabled;
         public bool CanAttack => !_isAttacking && _attackEnabled;
@@ -70,6 +74,8 @@ namespace Assets.Scripts
         {
             set => _jumpEnabled = value;
         }
+        
+        #endregion
 
         private void Start()
         {
@@ -109,7 +115,7 @@ namespace Assets.Scripts
             _defenseEnabled = false;
             _isDefending = true;
             _timeAfterShield = 0f;
-            DOVirtual.DelayedCall(shieldDuration, () =>
+            _defenseTween = DOVirtual.DelayedCall(shieldDuration, () =>
             {
                 shieldRenderer.enabled = false;
                 _isDefending = false;
@@ -138,6 +144,16 @@ namespace Assets.Scripts
         public void TakeDamage(int enemyDmg)
         {
             healthValue.CurrentValue -= enemyDmg;
+        }
+
+        public void NotifyParry()
+        {
+            AttackEnabled = true;
+            _defenseTween?.Kill();
+            _defenseTween = null;
+            _defenseEnabled = true;
+            _isDefending = false;
+            shieldRenderer.enabled = false;
         }
     }
 }
